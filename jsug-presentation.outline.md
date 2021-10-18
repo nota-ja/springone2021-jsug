@@ -7,6 +7,13 @@
 
 ## オリジナル
 
+* 発表者
+	* Alvaro Muñoz  
+	   Staff Security Researcher, GitHub
+	* Tony Torralba  
+	  Software Engineer, GitHub
+
+
 * 概要
 	* https://springone.io/2021/sessions/security-as-code-a-devsecops-approach
 * 動画
