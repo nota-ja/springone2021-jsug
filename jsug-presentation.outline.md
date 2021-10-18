@@ -91,7 +91,6 @@ cf. https://cyral.com/white-papers/what-is-security-as-code/
 * Security policies
 * Security testing
 	* 非機能テスト
-		* NASAがやったのはこれ以上
 * Vulnerability scanning
 	* 今から説明する CodeQL はこれ
 
