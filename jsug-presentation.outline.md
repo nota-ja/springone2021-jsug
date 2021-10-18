@@ -128,6 +128,8 @@ select m
 
 → 結果は1万9千メソッド
 
+![](./imgs/01-codeql-all-methods.png)
+
 
 ### 条件節を追加
 
@@ -145,6 +147,8 @@ select m
 ```
 
 → 結果は3メソッド
+
+![](./imgs/02-codeql-methods-with-requestmapping.png)
 
 
 ### オブジェクト指向を用いた再利用
@@ -168,6 +172,8 @@ select m
 ```
 
 → 同じ結果が返ってくる
+
+![](./imgs/03-codeql-methods-with-requestmapping-objectoriented.png)
 
 
 ### セキュリティっぽさを足してみる
@@ -194,6 +200,8 @@ select m
 
 → 先の結果から `deleteUser` を除いた2つ
 
+![](./imgs/04-codeql-methods-with-requestmapping-without-preauthorize.png)
+
 
 ### セキュアな方
 
@@ -214,12 +222,16 @@ select m
 
 → `deleteUser` が返ってくる
 
+![](./imgs/05-codeql-methods-with-requestmapping-and-preauthorize.png)
+
 
 ## より実際的なデモ
 
 ### ユーザー管理アプリケーション
 
 * ユーザーとパスワードのハッシュを管理/表示するアプリケーション
+
+![](./imgs/06-user-management-app.png)
 
 
 ### 賞金稼ぎ
@@ -228,13 +240,29 @@ select m
 	* => エラーになる
 		* Springを使っていることがわかる
 
+![](./imgs/07-bounty-hunter-tries-double-quote.png)
+
+![](./imgs/08-whitelabel-error-page.png)
+
+
 * SpELを試す
 	* サーバー側にファイルを作成  
 	  `".isEmpty() && T(java.lang.Runtime).getRuntime().exec("touch /tmp/pwned") && "a`
 		* => 成功
 
+![](./imgs/09-to-try-spel.png)
+
+![](./imgs/10-before-pwned.png)
+
+![](./imgs/11-trying-spel.png)
+
+![](./imgs/12-after-pwned.png)
+
 
 ## CodeQLでパターンをモデル化
+
+![](./imgs/13-taint-tracking-model.png)
+
 
 ### SINKのモデル化
 
@@ -255,6 +283,8 @@ class ExpressionParser extends Interface {
 ```
 
 => これを評価すると1件の結果が返ってくる
+
+![](./imgs/14-find-expressionparser-interface.png)
 
 
 #### メソッド呼び出しのモデル化
@@ -301,18 +331,36 @@ class SpELInjectionConf {
 	SpELInjectionConf() { this.SpELInjectionConf }
 
 	override predicate isSource(DataFlow::Node source) {
-		source instanceof RemoteFlowSource
+		source instanceof RemoteFlowSource // (2) evaluate this line
 	}
 	
 	override predicate isSink(DataFlow::Node sink) {
-		sink.asExpr() = any(ParseExpressionParser ma).getArgument(0) // evaluate this line
+		sink.asExpr() = any(ParseExpressionParser ma).getArgument(0) // (1) evaluate this line
 	}
 }
 
 // (omit)
 ```
 
-=> 結果は3件
+`(1)` を評価すると，1件の結果が返ってくる
+
+![](./imgs/17-find-first-arg-of-parseexpression.png)
+
+`parseExpression` メソッドの第1引数
+
+![](./imgs/18-first-arg-of-parseexpression-in-code.png)
+
+`(2)` の評価結果は3件
+
+![](./imgs/19-find-remoteflowsources.png)
+
+実際のコード
+
+![](./imgs/20-remoteflowsource-in-code-1.png)
+
+![](./imgs/21-remoteflowsource-in-code-2.png)
+
+![](./imgs/22-remoteflowsource-in-code-2.png)
 
 
 ### 最終的なquery
@@ -322,6 +370,24 @@ class SpELInjectionConf {
 * 結果は3件
 	* 1つはもともとのバグ
 	* 残り2つはその変種
+
+![](./imgs/23-final-query-and-results-of-3-paths.png)
+
+こんな感じでパスを辿ることも可能：
+
+![](./imgs/24-tainted-path-1-step-1.png)
+
+![](./imgs/25-tainted-path-1-step-2.png)
+
+![](./imgs/26-tainted-path-1-step-3.png)
+
+![](./imgs/27-tainted-path-1-step-4.png)
+
+![](./imgs/28-tainted-path-1-step-5.png)
+
+この例だと `isFieldValidate` メソッドの引数となっている `getUsername` メソッドで特殊文字をエスケープする等の対策を取ることが考えられる。
+
+![](./imgs/29-possible-counter-measure.png)
 
 
 ## 終わりに

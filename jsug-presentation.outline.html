@@ -10,6 +10,9 @@
 </head>
 <body class="markdown github">
 <h1 id="security-as-code:-codeqlを用いた脆弱性パターンの検出"><a name="security-as-code:-codeqlを用いた脆弱性パターンの検出" href="#security-as-code:-codeqlを用いた脆弱性パターンの検出"></a>Security as Code: CodeQLを用いた脆弱性パターンの検出</h1><p>2021年10月18日</p><p>谷口 展郎 (NTT)</p><h2 id="オリジナル"><a name="オリジナル" href="#オリジナル"></a>オリジナル</h2><ul>
+<li>発表者<ul>
+<li>Alvaro Muñoz<br> Staff Security Researcher, GitHub</li><li>Tony Torralba<br>Software Engineer, GitHub</li></ul>
+</li></ul><ul>
 <li>概要<ul>
 <li><a href="https://springone.io/2021/sessions/security-as-code-a-devsecops-approach">https://springone.io/2021/sessions/security-as-code-a-devsecops-approach</a></li></ul>
 </li><li>動画<ul>
@@ -56,7 +59,7 @@ Requirements, design, architecture ...<ul>
 <li>関係者全員がセキュリティに責任を持つ</li></ul>
 </li><li>Tooling<ul>
 <li>ポリシーを適用できるツール<ul>
-<li>例:開発者がビルド・パイプラインで使える</li></ul>
+<li>例: 開発者がビルド・パイプラインで使える</li></ul>
 </li></ul>
 </li><li>More guardrails and fewer Gates<ul>
 <li>Gates (関門) ではなく Guardrail として機能する</li></ul>
@@ -81,7 +84,7 @@ select m
 from Method m
 //where
 select m
-</code></pre><p>→ 結果は1万9千メソッド</p><h3 id="条件節を追加"><a name="条件節を追加" href="#条件節を追加"></a>条件節を追加</h3><p><code>RequestMapping</code> アノテーションを持つメソッドを検索</p><pre><code data-origin="<pre><code>import java
+</code></pre><p>→ 結果は1万9千メソッド</p><p><img src="imgs/01-codeql-all-methods.png" alt=""></p><h3 id="条件節を追加"><a name="条件節を追加" href="#条件節を追加"></a>条件節を追加</h3><p><code>RequestMapping</code> アノテーションを持つメソッドを検索</p><pre><code data-origin="<pre><code>import java
 
 from Method m
 where
@@ -97,7 +100,7 @@ where
         a.getType().getName() = "RequestMapping" and
         a = m.getAnnotation()
 select m
-</code></pre><p>→ 結果は3メソッド</p><h3 id="オブジェクト指向を用いた再利用"><a name="オブジェクト指向を用いた再利用" href="#オブジェクト指向を用いた再利用"></a>オブジェクト指向を用いた再利用</h3><p>宣言的なだけでなくオブジェクト指向でもある</p><pre><code data-origin="<pre><code>import java
+</code></pre><p>→ 結果は3メソッド</p><p><img src="imgs/02-codeql-methods-with-requestmapping.png" alt=""></p><h3 id="オブジェクト指向を用いた再利用"><a name="オブジェクト指向を用いた再利用" href="#オブジェクト指向を用いた再利用"></a>オブジェクト指向を用いた再利用</h3><p>宣言的なだけでなくオブジェクト指向でもある</p><pre><code data-origin="<pre><code>import java
 
 class ControllerMethod extends Method {
     ControllerMethod() {
@@ -123,7 +126,7 @@ class ControllerMethod extends Method {
 
 from ControllerMethod m
 select m
-</code></pre><p>→ 同じ結果が返ってくる</p><h3 id="セキュリティっぽさを足してみる"><a name="セキュリティっぽさを足してみる" href="#セキュリティっぽさを足してみる"></a>セキュリティっぽさを足してみる</h3><p><code>@RequestMapping</code> を持ち，かつ <code>@PreAuthorize</code> 持たないメソッドを検索</p><pre><code data-origin="<pre><code>import java
+</code></pre><p>→ 同じ結果が返ってくる</p><p><img src="imgs/03-codeql-methods-with-requestmapping-objectoriented.png" alt=""></p><h3 id="セキュリティっぽさを足してみる"><a name="セキュリティっぽさを足してみる" href="#セキュリティっぽさを足してみる"></a>セキュリティっぽさを足してみる</h3><p><code>@RequestMapping</code> を持ち，かつ <code>@PreAuthorize</code> 持たないメソッドを検索</p><pre><code data-origin="<pre><code>import java
 
 // (omit)
 
@@ -153,7 +156,7 @@ class OpenControllerMethod extends ControllerMethod {
 
 from OpenControllerMethod m
 select m
-</code></pre><p>→ 先の結果から <code>deleteUser</code> を除いた2つ</p><h3 id="セキュアな方"><a name="セキュアな方" href="#セキュアな方"></a>セキュアな方</h3><pre><code data-origin="<pre><code>import java
+</code></pre><p>→ 先の結果から <code>deleteUser</code> を除いた2つ</p><p><img src="imgs/04-codeql-methods-with-requestmapping-without-preauthorize.png" alt=""></p><h3 id="セキュアな方"><a name="セキュアな方" href="#セキュアな方"></a>セキュアな方</h3><pre><code data-origin="<pre><code>import java
 
 // (omit)
 
@@ -177,19 +180,18 @@ class SecuredControllerMethod extends ControllerMethod {
 
 from SecuredControllerMethod m
 select m
-</code></pre><p>→ <code>deleteUser</code> が返ってくる</p><h2 id="より実際的なデモ"><a name="より実際的なデモ" href="#より実際的なデモ"></a>より実際的なデモ</h2><h3 id="ユーザー管理アプリケーション"><a name="ユーザー管理アプリケーション" href="#ユーザー管理アプリケーション"></a>ユーザー管理アプリケーション</h3><ul>
-<li>ユーザーとパスワードのハッシュを管理/表示するアプリケーション</li></ul><h3 id="賞金稼ぎ"><a name="賞金稼ぎ" href="#賞金稼ぎ"></a>賞金稼ぎ</h3><ul>
-<li><p>ユーザー登録画面で特殊文字 (例: <code>"</code>) を入力</p>
-<ul>
+</code></pre><p>→ <code>deleteUser</code> が返ってくる</p><p><img src="imgs/05-codeql-methods-with-requestmapping-and-preauthorize.png" alt=""></p><h2 id="より実際的なデモ"><a name="より実際的なデモ" href="#より実際的なデモ"></a>より実際的なデモ</h2><h3 id="ユーザー管理アプリケーション"><a name="ユーザー管理アプリケーション" href="#ユーザー管理アプリケーション"></a>ユーザー管理アプリケーション</h3><ul>
+<li>ユーザーとパスワードのハッシュを管理/表示するアプリケーション</li></ul><p><img src="imgs/06-user-management-app.png" alt=""></p><h3 id="賞金稼ぎ"><a name="賞金稼ぎ" href="#賞金稼ぎ"></a>賞金稼ぎ</h3><ul>
+<li>ユーザー登録画面で特殊文字 (例: <code>"</code>) を入力<ul>
 <li>=&gt; エラーになる<ul>
 <li>Springを使っていることがわかる</li></ul>
 </li></ul>
-</li><li><p>SpELを試す</p>
-<ul>
-<li>サーバー側にファイルを作成<ul>
+</li></ul><p><img src="imgs/07-bounty-hunter-tries-double-quote.png" alt=""></p><p><img src="imgs/08-whitelabel-error-page.png" alt=""></p><ul>
+<li>SpELを試す<ul>
+<li>サーバー側にファイルを作成<br><code>".isEmpty() &amp;&amp; T(java.lang.Runtime).getRuntime().exec("touch /tmp/pwned") &amp;&amp; "a</code><ul>
 <li>=&gt; 成功</li></ul>
 </li></ul>
-</li></ul><h2 id="codeqlでパターンをモデル化"><a name="codeqlでパターンをモデル化" href="#codeqlでパターンをモデル化"></a>CodeQLでパターンをモデル化</h2><h3 id="sinkのモデル化"><a name="sinkのモデル化" href="#sinkのモデル化"></a>SINKのモデル化</h3><h4 id="`expressionparser`-interface-のモデル化"><a name="`expressionparser`-interface-のモデル化" href="#`expressionparser`-interface-のモデル化"></a><code>ExpressionParser</code> Interface のモデル化</h4><p>SpELのparserは，通常 <code>org.springframework.expression.ExpressionParser</code> Interface を継承しているので，それを探す</p><pre><code data-origin="<pre><code>import java
+</li></ul><p><img src="imgs/09-to-try-spel.png" alt=""></p><p><img src="imgs/10-before-pwned.png" alt=""></p><p><img src="imgs/11-trying-spel.png" alt=""></p><p><img src="imgs/12-after-pwned.png" alt=""></p><h2 id="codeqlでパターンをモデル化"><a name="codeqlでパターンをモデル化" href="#codeqlでパターンをモデル化"></a>CodeQLでパターンをモデル化</h2><p><img src="imgs/13-taint-tracking-model.png" alt=""></p><h3 id="sinkのモデル化"><a name="sinkのモデル化" href="#sinkのモデル化"></a>SINKのモデル化</h3><h4 id="`expressionparser`-interface-のモデル化"><a name="`expressionparser`-interface-のモデル化" href="#`expressionparser`-interface-のモデル化"></a><code>ExpressionParser</code> Interface のモデル化</h4><p>SpELのparserは，通常 <code>org.springframework.expression.ExpressionParser</code> Interface を継承しているので，それを探す</p><pre><code data-origin="<pre><code>import java
 
 class ExpressionParser extends Interface {
     ExpressionParser() {
@@ -207,7 +209,7 @@ class ExpressionParser extends Interface {
 }
 
 // (omit)
-</code></pre><p>=&gt; これを評価すると1件の結果が返ってくる</p><h4 id="メソッド呼び出しのモデル化"><a name="メソッド呼び出しのモデル化" href="#メソッド呼び出しのモデル化"></a>メソッド呼び出しのモデル化</h4><p>実際に探したいのはInterfaceではなくそれを継承したクラスの <code>parseExpression</code> メソッド呼び出し</p><pre><code data-origin="<pre><code>// (omit)
+</code></pre><p>=&gt; これを評価すると1件の結果が返ってくる</p><p><img src="imgs/14-find-expressionparser-interface.png" alt=""></p><h4 id="メソッド呼び出しのモデル化"><a name="メソッド呼び出しのモデル化" href="#メソッド呼び出しのモデル化"></a>メソッド呼び出しのモデル化</h4><p>実際に探したいのはInterfaceではなくそれを継承したクラスの <code>parseExpression</code> メソッド呼び出し</p><pre><code data-origin="<pre><code>// (omit)
 
 class ParseExpressionParser extends MethodAccess {
     ParseExpressionParser() {
@@ -231,7 +233,7 @@ class ParseExpressionParser extends MethodAccess {
 }
 
 // (omit)
-</code></pre><p>=&gt; 結果は1件</p><h3 id="source-のモデル化"><a name="source-のモデル化" href="#source-のモデル化"></a>Source のモデル化</h3><p>Spring-specificな入力のモデルを提供しているライブラリーがあるのでそれを使う<br>=&gt; 実際に作成するのは SpEL injection の configuration</p><p>と taint tracking</p><pre><code data-origin="<pre><code>import java
+</code></pre><p>=&gt; 結果は1件</p><p><img src="imgs/15-find-parseexpression-method-ivocation.png" alt=""></p><p>実際のコードはこうなっている</p><p><img src="imgs/16-parseecpression-invocation-in-code.png" alt=""></p><h3 id="source-のモデル化"><a name="source-のモデル化" href="#source-のモデル化"></a>Source のモデル化</h3><p>Spring-specificな入力のモデルを提供しているライブラリーがあるのでそれを使う<br>=&gt; 実際に作成するのは SpEL injection の configuration</p><pre><code data-origin="<pre><code>import java
 import semmle.code.java.dataflow.TaintTracking
 import semmle.code.java.dataflow.FlowSources
 
@@ -241,11 +243,11 @@ class SpELInjectionConf {
     SpELInjectionConf() { this.SpELInjectionConf }
 
     override predicate isSource(DataFlow::Node source) {
-        source instanceof RemoteFlowSource
+        source instanceof RemoteFlowSource // (2) evaluate this line
     }
 
     override predicate isSink(DataFlow::Node sink) {
-        sink.asExpr() = any(ParseExpressionParser ma).getArgument(0) // evaluate this line
+        sink.asExpr() = any(ParseExpressionParser ma).getArgument(0) // (1) evaluate this line
     }
 }
 
@@ -260,19 +262,19 @@ class SpELInjectionConf {
     SpELInjectionConf() { this.SpELInjectionConf }
 
     override predicate isSource(DataFlow::Node source) {
-        source instanceof RemoteFlowSource
+        source instanceof RemoteFlowSource // (2) evaluate this line
     }
 
     override predicate isSink(DataFlow::Node sink) {
-        sink.asExpr() = any(ParseExpressionParser ma).getArgument(0) // evaluate this line
+        sink.asExpr() = any(ParseExpressionParser ma).getArgument(0) // (1) evaluate this line
     }
 }
 
 // (omit)
-</code></pre><p>=&gt; 結果は3件</p><h3 id="最終的なquery"><a name="最終的なquery" href="#最終的なquery"></a>最終的なquery</h3><ul>
+</code></pre><p><code>(1)</code> を評価すると，1件の結果が返ってくる</p><p><img src="imgs/17-find-first-arg-of-parseexpression.png" alt=""></p><p><code>parseExpression</code> メソッドの第1引数</p><p><img src="imgs/18-first-arg-of-parseexpression-in-code.png" alt=""></p><p><code>(2)</code> の評価結果は3件</p><p><img src="imgs/19-find-remoteflowsources.png" alt=""></p><p>実際のコード</p><p><img src="imgs/20-remoteflowsource-in-code-1.png" alt=""></p><p><img src="imgs/21-remoteflowsource-in-code-2.png" alt=""></p><p><img src="imgs/22-remoteflowsource-in-code-2.png" alt=""></p><h3 id="最終的なquery"><a name="最終的なquery" href="#最終的なquery"></a>最終的なquery</h3><ul>
 <li><a href="https://github.com/atorralba/springone-demo/blob/main/codeql/CompleteQuery.ql">https://github.com/atorralba/springone-demo/blob/main/codeql/CompleteQuery.ql</a></li><li>source =&gt; sink のパスを表示</li><li>結果は3件<ul>
 <li>1つはもともとのバグ</li><li>残り2つはその変種</li></ul>
-</li></ul><h2 id="終わりに"><a name="終わりに" href="#終わりに"></a>終わりに</h2><h3 id="codeql"><a name="codeql" href="#codeql"></a>CodeQL</h3><ul>
+</li></ul><p><img src="imgs/23-final-query-and-results-of-3-paths.png" alt=""></p><p>こんな感じでパスを辿ることも可能：</p><p><img src="imgs/24-tainted-path-1-step-1.png" alt=""></p><p><img src="imgs/25-tainted-path-1-step-2.png" alt=""></p><p><img src="imgs/26-tainted-path-1-step-3.png" alt=""></p><p><img src="imgs/27-tainted-path-1-step-4.png" alt=""></p><p><img src="imgs/28-tainted-path-1-step-5.png" alt=""></p><p>この例だと <code>isFieldValidate</code> メソッドの引数となっている <code>getUsername</code> メソッドで特殊文字をエスケープする等の対策を取ることが考えられる。</p><p><img src="imgs/29-possible-counter-measure.png" alt=""></p><h2 id="終わりに"><a name="終わりに" href="#終わりに"></a>終わりに</h2><h3 id="codeql"><a name="codeql" href="#codeql"></a>CodeQL</h3><ul>
 <li><p>ビルド・パイプラインに容易に統合できる</p>
 <ul>
 <li>GitHub の <code>Security</code> タブ<ul>
