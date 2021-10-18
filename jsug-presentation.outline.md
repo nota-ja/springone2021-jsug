@@ -74,7 +74,7 @@ cf. https://cyral.com/white-papers/what-is-security-as-code/
 	* 関係者全員がセキュリティに責任を持つ
 * Tooling
 	* ポリシーを適用できるツール
-		* 例:開発者がビルド・パイプラインで使える
+		* 例: 開発者がビルド・パイプラインで使える
 * More guardrails and fewer Gates
 	* Gates (関門) ではなく Guardrail として機能する
 
@@ -122,7 +122,7 @@ select m
 → 結果は1万9千メソッド
 
 
-### 条件節を追加  
+### 条件節を追加
 
 `RequestMapping` アノテーションを持つメソッドを検索
 
@@ -189,7 +189,6 @@ select m
 
 
 ### セキュアな方
-
 
 ```
 import java
