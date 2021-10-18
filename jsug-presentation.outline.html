@@ -44,7 +44,7 @@
 </li>
 </ul>
 </li>
-<li>最新の探査機 Perservernce ではライフサイクル初期からCodeQLを導入</li>
+<li>最新の探査機 Perseverance ではライフサイクル初期からCodeQLを導入</li>
 </ul><h3 id="1-2-shifting-security-left">1.2. Shifting Security Left</h3><ul>
 <li>誤解<ul>
 <li>It's not just "automate and run earlier"<ul>
@@ -104,16 +104,13 @@
 </ul>
 </li>
 <li>More guardrails and fewer Gates<ul>
-<li>Gates (関門) ではなく Guardrail として機能する</li>
+<li>Gates (関門) ではなく Guardrails として機能する</li>
 </ul>
 </li>
 </ul><h3 id="2-2-sac-">2.2. SaC がカバーする範囲</h3><ul>
 <li>Security policies</li>
 <li>Security testing<ul>
-<li>非機能テスト<ul>
-<li>NASAがやったのはこれ以上</li>
-</ul>
-</li>
+<li>非機能テスト</li>
 </ul>
 </li>
 <li>Vulnerability scanning<ul>
@@ -186,7 +183,7 @@ class ControllerMethod extends Method {
 
 from ControllerMethod m
 select m
-</code></pre><p>→ 同じ結果が返ってくる</p><p><img src="imgs/03-codeql-methods-with-requestmapping-objectoriented.png" alt=""></p><h3 id="3-4-">3.4. セキュリティっぽさを足してみる</h3><p><code>@RequestMapping</code> を持ち，かつ <code>@PreAuthorize</code> 持たないメソッドを検索</p><pre><code data-origin="<pre><code>import java
+</code></pre><p>→ 同じ結果が返ってくる</p><p><img src="imgs/03-codeql-methods-with-requestmapping-objectoriented.png" alt=""></p><h3 id="3-4-">3.4. セキュリティっぽさを足してみる</h3><p><code>@RequestMapping</code> を持ち，かつ <code>@PreAuthorize</code> を持たないメソッドを検索</p><pre><code data-origin="<pre><code>import java
 
 // (omit)
 
@@ -306,8 +303,8 @@ import semmle.code.java.dataflow.FlowSources
 
 // (omit)
 
-class SpELInjectionConf {
-    SpELInjectionConf() { this.SpELInjectionConf }
+class SpELInjectionConf extends TaintTracking::Configuration {
+    SpELInjectionConf() { this = &quot;SpELInjectionConf&quot; }
 
     override predicate isSource(DataFlow::Node source) {
         source instanceof RemoteFlowSource // (2) evaluate this line
@@ -325,8 +322,8 @@ import semmle.code.java.dataflow.FlowSources
 
 // (omit)
 
-class SpELInjectionConf {
-    SpELInjectionConf() { this.SpELInjectionConf }
+class SpELInjectionConf extends TaintTracking::Configuration {
+    SpELInjectionConf() { this = "SpELInjectionConf" }
 
     override predicate isSource(DataFlow::Node source) {
         source instanceof RemoteFlowSource // (2) evaluate this line
@@ -346,7 +343,7 @@ class SpELInjectionConf {
 <li>残り2つはその変種</li>
 </ul>
 </li>
-</ul><p><img src="imgs/23-final-query-and-results-of-3-paths.png" alt=""></p><p>こんな感じでパスを辿ることも可能：</p><p><img src="imgs/24-tainted-path-1-step-1.png" alt=""></p><p><img src="imgs/25-tainted-path-1-step-2.png" alt=""></p><p><img src="imgs/26-tainted-path-1-step-3.png" alt=""></p><p><img src="imgs/27-tainted-path-1-step-4.png" alt=""></p><p><img src="imgs/28-tainted-path-1-step-5.png" alt=""></p><p>この例だと <code>isFieldValidate</code> メソッドの引数となっている <code>getUsername</code> メソッドで特殊文字をエスケープする等の対策を取ることが考えられる。</p><p><img src="imgs/29-possible-counter-measure.png" alt=""></p><h2 id="6-">6. 終わりに</h2><h3 id="6-1-codeql">6.1. CodeQL</h3><ul>
+</ul><p><img src="imgs/23-final-query-and-results-of-3-paths.png" alt=""></p><p>こんな感じでパスを辿ることも可能：</p><p><img src="imgs/24-tainted-path-1-step-1.png" alt=""></p><p><img src="imgs/25-tainted-path-1-step-2.png" alt=""></p><p><img src="imgs/26-tainted-path-1-step-3.png" alt=""></p><p><img src="imgs/27-tainted-path-1-step-4.png" alt=""></p><p><img src="imgs/28-tainted-path-1-step-5.png" alt=""></p><p>この例だと <code>isFieldValid</code> メソッドの引数となっている <code>getUsername</code> メソッドで特殊文字をエスケープする等の対策を取ることが考えられる。</p><p><img src="imgs/29-possible-counter-measure.png" alt=""></p><h2 id="6-">6. 終わりに</h2><h3 id="6-1-codeql">6.1. CodeQL</h3><ul>
 <li><p>ビルド・パイプラインに容易に統合できる</p>
 <ul>
 <li>GitHub の <code>Security</code> タブ<ul>
@@ -365,7 +362,7 @@ class SpELInjectionConf {
 <li>年数百件のCVEを報告</li>
 <li>オープンソース・コンポーネント/ライブラリー向けセキュリティ・アドヴァイザリーの精選されたデータベースを管理</li>
 <li>Cotribution歓迎！<ul>
-<li><a href="https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/35">https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/35</a></li>
+<li><a href="https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/36">https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/36</a></li>
 <li>昨年は10万ドル以上の賞金</li>
 <li><a href="https://securitylab.github.com/bounties/">https://securitylab.github.com/bounties/</a></li>
 </ul>
