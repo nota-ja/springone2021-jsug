@@ -407,7 +407,7 @@ class SpELInjectionConf {
 https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/35
 
 
-## GitHub Secuirty Lab
+### GitHub Secuirty Lab
 
 * 年数百件のCVEを報告
 * オープンソース・コンポーネント/ライブラリー向けセキュリティ・アドヴァイザリーの精選されたデータベースを管理
