@@ -278,13 +278,17 @@ class ParseExpressionParser extends MethodAccess {
 
 => 結果は1件
 
+![](./imgs/15-find-parseexpression-method-ivocation.png)
+
+実際のコードはこうなっている
+
+![](./imgs/16-parseecpression-invocation-in-code.png)
+
 
 ### Source のモデル化
 
 Spring-specificな入力のモデルを提供しているライブラリーがあるのでそれを使う  
 => 実際に作成するのは SpEL injection の configuration
-
-と taint tracking
 
 ```
 import java
