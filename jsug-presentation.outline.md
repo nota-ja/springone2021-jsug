@@ -33,7 +33,7 @@
 		* 30件発見
 	* ライフサイクル終盤 (火星への飛行中) に発見
 		* 莫大な費用がかかった
-* 最新の探査機 Perservernce ではライフサイクル初期からCodeQLを導入
+* 最新の探査機 Perseverance ではライフサイクル初期からCodeQLを導入
 
 
 ### 1.2. Shifting Security Left
@@ -83,7 +83,7 @@ cf. https://cyral.com/white-papers/what-is-security-as-code/
 	* ポリシーを適用できるツール
 		* 例: 開発者がビルド・パイプラインで使える
 * More guardrails and fewer Gates
-	* Gates (関門) ではなく Guardrail として機能する
+	* Gates (関門) ではなく Guardrails として機能する
 
 
 ### 2.2. SaC がカバーする範囲
@@ -178,7 +178,7 @@ select m
 
 ### 3.4. セキュリティっぽさを足してみる
 
-`@RequestMapping` を持ち，かつ `@PreAuthorize` 持たないメソッドを検索
+`@RequestMapping` を持ち，かつ `@PreAuthorize` を持たないメソッドを検索
 
 ```
 import java
@@ -385,7 +385,7 @@ class SpELInjectionConf {
 
 ![](./imgs/28-tainted-path-1-step-5.png)
 
-この例だと `isFieldValidate` メソッドの引数となっている `getUsername` メソッドで特殊文字をエスケープする等の対策を取ることが考えられる。
+この例だと `isFieldValid` メソッドの引数となっている `getUsername` メソッドで特殊文字をエスケープする等の対策を取ることが考えられる。
 
 ![](./imgs/29-possible-counter-measure.png)
 
@@ -412,6 +412,6 @@ https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/35
 * 年数百件のCVEを報告
 * オープンソース・コンポーネント/ライブラリー向けセキュリティ・アドヴァイザリーの精選されたデータベースを管理
 * Cotribution歓迎！
-	* https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/35
+	* https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/36
 	* 昨年は10万ドル以上の賞金
 	* https://securitylab.github.com/bounties/
