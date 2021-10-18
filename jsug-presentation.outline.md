@@ -327,13 +327,13 @@ import semmle.code.java.dataflow.FlowSources
 
 // (omit)
 
-class SpELInjectionConf {
-	SpELInjectionConf() { this.SpELInjectionConf }
+class SpELInjectionConf extends TaintTracking::Configuration {
+	SpELInjectionConf() { this = "SpELInjectionConf" }
 
 	override predicate isSource(DataFlow::Node source) {
 		source instanceof RemoteFlowSource // (2) evaluate this line
 	}
-	
+
 	override predicate isSink(DataFlow::Node sink) {
 		sink.asExpr() = any(ParseExpressionParser ma).getArgument(0) // (1) evaluate this line
 	}
