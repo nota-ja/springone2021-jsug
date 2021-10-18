@@ -8,9 +8,9 @@
 ## 0. オリジナル
 
 * 発表者
-	* Alvaro Muñoz  
+	* Alvaro Muñoz
 	   Staff Security Researcher, GitHub
-	* Tony Torralba  
+	* Tony Torralba
 	  Software Engineer, GitHub
 
 
@@ -74,7 +74,7 @@
 
 ### 2.1. 定義
 
-> The methodology of codifying security and policy decisions and socializing them with other teams  
+> The methodology of codifying security and policy decisions and socializing them with other teams
 cf. https://cyral.com/white-papers/what-is-security-as-code/
 
 * Responsibility
@@ -246,7 +246,7 @@ select m
 
 
 * SpELを試す
-	* サーバー側にファイルを作成  
+	* サーバー側にファイルを作成
 	  `".isEmpty() && T(java.lang.Runtime).getRuntime().exec("touch /tmp/pwned") && "a`
 		* => 成功
 
@@ -317,7 +317,7 @@ class ParseExpressionParser extends MethodAccess {
 
 ### 5.2. Source のモデル化
 
-Spring-specificな入力のモデルを提供しているライブラリーがあるのでそれを使う  
+Spring-specificな入力のモデルを提供しているライブラリーがあるのでそれを使う
 => 実際に作成するのは SpEL injection の configuration
 
 ```
