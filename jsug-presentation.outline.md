@@ -5,7 +5,7 @@
 谷口 展郎 (NTT)
 
 
-## オリジナル
+## 0. オリジナル
 
 * 発表者
 	* Alvaro Muñoz  
@@ -22,9 +22,9 @@
 	* https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach
 
 
-## はじめに
+## 1. はじめに
 
-### 火星探査機
+### 1.1. 火星探査機
 
 * Curiosity (9年前)
 	* 12次元の配列を受け取る引数に3つしか値の入っていないものを渡すバグ
@@ -36,7 +36,7 @@
 * 最新の探査機 Perservernce ではライフサイクル初期からCodeQLを導入
 
 
-### Shifting Security Left
+### 1.2. Shifting Security Left
 
 * 誤解
 	* It's not just "automate and run earlier"
@@ -50,7 +50,7 @@
 			* それを設計, アーキテクチャ, コードに適用する
 
 
-### What motivate us
+### 1.3. What motivate us
 
 * (Daniel H. Pink "Drive" より)
 	* Autonomy (自律)
@@ -61,7 +61,7 @@
 		* 何のためにセキュリティ対応を行うのかを理解しなければやる気が湧かない
 
 
-### DevOps => DevSecOps
+### 1.4. DevOps => DevSecOps
 
 * ゴール (Purpose) を一致させる
 	* チーム間でゴール(KPI)が異なるとうまくいかない
@@ -70,9 +70,9 @@
 	* Security as Code: Devが自らSecの業務に習熟
 
 
-## Security as Code
+## 2. Security as Code
 
-### 定義
+### 2.1. 定義
 
 > The methodology of codifying security and policy decisions and socializing them with other teams  
 cf. https://cyral.com/white-papers/what-is-security-as-code/
@@ -86,7 +86,7 @@ cf. https://cyral.com/white-papers/what-is-security-as-code/
 	* Gates (関門) ではなく Guardrail として機能する
 
 
-### SaC がカバーする範囲
+### 2.2. SaC がカバーする範囲
 
 * Security policies
 * Security testing
@@ -96,7 +96,7 @@ cf. https://cyral.com/white-papers/what-is-security-as-code/
 	* 今から説明する CodeQL はこれ
 
 
-### CodeQL
+### 2.3. CodeQL
 
 * SQL に似た宣言的検索言語
 * コードをデータのように扱い検索可能に
@@ -106,7 +106,7 @@ cf. https://cyral.com/white-papers/what-is-security-as-code/
 * 用途はセキュリティに限定されない
 
 
-### CodeQL の基本構文
+### 2.4. CodeQL の基本構文
 
 1. `import`: ライブラリー
 2. `from`: データベース中のどのテーブルを検索するか
@@ -114,9 +114,9 @@ cf. https://cyral.com/white-papers/what-is-security-as-code/
 4. `select`: 結果として返される項目
 
 
-## VS Code を用いたデモ
+## 3. VS Code を用いたデモ
 
-### コードから全てのメソッドを検索
+### 3.1. コードから全てのメソッドを検索
 
 ```
 import java
@@ -131,7 +131,7 @@ select m
 ![](./imgs/01-codeql-all-methods.png)
 
 
-### 条件節を追加
+###3.2. 条件節を追加
 
 `RequestMapping` アノテーションを持つメソッドを検索
 
@@ -151,7 +151,7 @@ select m
 ![](./imgs/02-codeql-methods-with-requestmapping.png)
 
 
-### オブジェクト指向を用いた再利用
+### 3.3. オブジェクト指向を用いた再利用
 
 宣言的なだけでなくオブジェクト指向でもある
 
@@ -176,7 +176,7 @@ select m
 ![](./imgs/03-codeql-methods-with-requestmapping-objectoriented.png)
 
 
-### セキュリティっぽさを足してみる
+### 3.4. セキュリティっぽさを足してみる
 
 `@RequestMapping` を持ち，かつ `@PreAuthorize` 持たないメソッドを検索
 
@@ -203,7 +203,7 @@ select m
 ![](./imgs/04-codeql-methods-with-requestmapping-without-preauthorize.png)
 
 
-### セキュアな方
+### 3.5. セキュアな方
 
 ```
 import java
@@ -225,16 +225,16 @@ select m
 ![](./imgs/05-codeql-methods-with-requestmapping-and-preauthorize.png)
 
 
-## より実際的なデモ
+## 4. より実際的なデモ
 
-### ユーザー管理アプリケーション
+### 4.1. ユーザー管理アプリケーション
 
 * ユーザーとパスワードのハッシュを管理/表示するアプリケーション
 
 ![](./imgs/06-user-management-app.png)
 
 
-### 賞金稼ぎ
+### 4.2. 賞金稼ぎ
 
 * ユーザー登録画面で特殊文字 (例: `"`) を入力
 	* => エラーになる
@@ -259,12 +259,12 @@ select m
 ![](./imgs/12-after-pwned.png)
 
 
-## CodeQLでパターンをモデル化
+## 5. CodeQLでパターンをモデル化
 
 ![](./imgs/13-taint-tracking-model.png)
 
 
-### SINKのモデル化
+### 5.1. SINKのモデル化
 
 #### `ExpressionParser` Interface のモデル化
 
@@ -315,7 +315,7 @@ class ParseExpressionParser extends MethodAccess {
 ![](./imgs/16-parseecpression-invocation-in-code.png)
 
 
-### Source のモデル化
+### 5.2. Source のモデル化
 
 Spring-specificな入力のモデルを提供しているライブラリーがあるのでそれを使う  
 => 実際に作成するのは SpEL injection の configuration
@@ -363,7 +363,7 @@ class SpELInjectionConf {
 ![](./imgs/22-remoteflowsource-in-code-2.png)
 
 
-### 最終的なquery
+### 5.3. 最終的なquery
 
 * https://github.com/atorralba/springone-demo/blob/main/codeql/CompleteQuery.ql
 * source => sink のパスを表示
@@ -390,9 +390,9 @@ class SpELInjectionConf {
 ![](./imgs/29-possible-counter-measure.png)
 
 
-## 終わりに
+## 6. 終わりに
 
-### CodeQL
+### 6.1. CodeQL
 
 * ビルド・パイプラインに容易に統合できる
 	* GitHub の `Security` タブ
@@ -402,12 +402,12 @@ class SpELInjectionConf {
 * Community Powered
 	* https://github.com/github/codeql
 
-### Springサポート
+### 6.2. Springサポート
 
 https://www.slideshare.net/Pivotal/security-as-code-a-devsecops-approach/35
 
 
-### GitHub Secuirty Lab
+### 6.3. GitHub Secuirty Lab
 
 * 年数百件のCVEを報告
 * オープンソース・コンポーネント/ライブラリー向けセキュリティ・アドヴァイザリーの精選されたデータベースを管理
